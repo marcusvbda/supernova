@@ -1,0 +1,20 @@
+{
+    "name": "marcusvbda/supernova",
+    "license": "MIT",
+    "description": "",
+    "version": "1.0.0",
+    "authors": [
+        {
+            "name": "Marcus Vinicius Bassalobre de Assis",
+            "email": "bassalobre.vinicius@gmail.com"
+        }
+    ],
+    "autoload": {
+        "psr-4": {
+            "marcusvbda\\supernova\\": "/"
+        }
+    },
+    "require": {
+        "livewire/livewire": "^3.4"
+    }
+}
