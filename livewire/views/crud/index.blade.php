@@ -6,7 +6,7 @@
     $fieldPanels = collect($panels)->where('type', 'fields')->toArray();
     $resourcePanels = collect($panels)->where('type', 'resources')->toArray();
 @endphp
-<div class="flex flex-col pb-10">
+<div class="flex flex-col pb-10" x-data="crud_view">
     @foreach ($fieldPanels as $key => $panel)
         <div class="flex flex-col md:flex-row md:flex items-center justify-between">
             <h4
@@ -15,7 +15,7 @@
             </h4>
             @if ($key === 0)
                 <div class="mt-4 flex justify-end order-1">
-                    <button type="button" wire:click="save"
+                    <button type="button" @click="save"
                         class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-6 rounded transition  w-full md:w-auto"">
                         Salvar
                     </button>
@@ -27,7 +27,7 @@
         @endphp
         <div
             class="flex flex-col justify-between text-gray-700 border border-gray-200 rounded-lg sm:flex bg-gray-50 dark:bg-gray-800 dark:border-gray-700 relative">
-            <div wire:loading>
+            <template x-if="loading">
                 <div class="flex items-center justify-center w-full cursor-wait"
                     style="position: absolute;inset: 0;background-color: #77777729;z-index=9;display:flex;align-items-center;justify-content:center;z-index: 9;">
                     <div class="flex flex-col items-center gap-10 my-20 justify-center">
@@ -41,7 +41,7 @@
                         </svg>
                     </div>
                 </div>
-            </div>
+            </template>
             @foreach ($fields as $fieldIndex => $field)
                 @if (data_get($field, 'visible'))
                     <div
@@ -54,10 +54,17 @@
                         <div class="w-full md:w-9/12 text-gray-600 dark:text-gray-300">
                             @php
                                 $type = data_get($field, 'type');
+                                $component = data_get($field, 'component');
                                 $fieldBlade = "supernova-livewire-views::crud.fields.$type";
                             @endphp
-                            @if (View::exists($fieldBlade))
-                                @include($fieldBlade, ['field' => $field])
+                            @if (!$component)
+                                @if (View::exists($fieldBlade))
+                                    @include($fieldBlade, ['field' => $field])
+                                @else
+                                    {!! $appModule->processFieldDetail($entity, $field) !!}
+                                @endif
+                            @else
+                                {!! $component($entity, [...$values, ...$uploadValues], $entity ? 'edit' : 'create') !!}
                             @endif
                         </div>
                     </div>
@@ -84,3 +91,22 @@
         @endforeach
     @endif
 </div>
+@script
+    <script>
+        Alpine.data('crud_view', () => {
+            return {
+                loading: false,
+                save() {
+                    this.loading = true;
+                    @this.save()
+                        .then(() => {
+                            this.loading = false;
+                        })
+                        .catch(() => {
+                            this.loading = false;
+                        });
+                }
+            }
+        })
+    </script>
+@endscript

@@ -11,6 +11,7 @@ class Field
     public $uploadDisk;
     public $model;
     public $query;
+    public $component;
     public $limit = 1;
     public $multiple = false;
     public $detailCallback;
@@ -33,6 +34,12 @@ class Field
     public static function make($field, $label = null): Field
     {
         return new static($field, $label);
+    }
+
+    public function component($component = null): Field
+    {
+        $this->component = $component;
+        return $this;
     }
 
     public function __construct($field, $label = null)

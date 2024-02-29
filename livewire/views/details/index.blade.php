@@ -5,6 +5,12 @@
     $panels = $appModule->getVisibleFieldPanels('Detalhes de', $entity, 'details');
     $fieldPanels = collect($panels)->where('type', 'fields')->toArray();
     $resourcePanels = collect($panels)->where('type', 'resources')->toArray();
+    $values = [];
+    foreach ($fieldPanels as $panel) {
+        foreach ($panel->fields as $field) {
+            $values[$field->field] = $appModule->processFieldDetail($entity, $field);
+        }
+    }
 @endphp
 <div class="flex flex-col pb-10">
     @foreach ($fieldPanels as $key => $panel)
@@ -46,7 +52,14 @@
                             </h4>
                         </label>
                         <div class="w-full md:w-9/12 text-gray-600 dark:text-gray-300">
-                            {!! $appModule->processFieldDetail($entity, $field) !!}
+                            @php
+                                $component = $field->component;
+                            @endphp
+                            @if (!$component)
+                                {!! $values[$field->field] !!}
+                            @else
+                                {!! $component($entity, $values, 'details') !!}
+                            @endif
                         </div>
                     </div>
                 @endif
