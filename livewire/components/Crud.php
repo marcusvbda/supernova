@@ -7,6 +7,7 @@ use Livewire\Component;
 use marcusvbda\supernova\FIELD_TYPES;
 use Livewire\Attributes\Lazy;
 use marcusvbda\supernova\traits\WithFileUploads;
+use Livewire\Attributes\On;
 
 #[Lazy]
 class Crud extends Component
@@ -134,31 +135,20 @@ class Crud extends Component
         return $application->getModule($this->module, false);
     }
 
-    public function loadInputOptions($field)
+    #[On('field-removed')]
+    public function removeOption($values)
     {
-        $fields = $this->allFields();
-        $field = collect($fields)->first(function ($f) use ($field) {
-            return $f->field == $field;
-        });
-        $options_callback = $field->options_callback;
-        if ($options_callback && is_callable($options_callback)) {
-            $this->options[$field->field] = $options_callback();
-        } else {
-            $this->options[$field->field] = $field->options;
-        }
-        $this->loaded_options[$field->field] = true;
-    }
-
-    public function removeOption($field, $index)
-    {
+        $field = data_get($values, 'index');
+        $value = data_get($values, 'value');
         $oldValues = data_get($this->values, $field, []);
-        $newValues = collect($oldValues)->filter(fn ($item) => $item != $index);
+        $newValues = collect($oldValues)->filter(fn ($item) => $item != $value);
         $this->values[$field] = $newValues->count() > 0 ? $newValues->toArray() : [];
     }
 
-    public function setSelectOption($val, $field)
+    #[On('field-selected')]
+    public function setSelectOption($values)
     {
-        $this->values[$field][] = $val;
+        $this->values[data_get($values, 'index')][] = data_get($values, 'value');
     }
 
     public function removeUploadValue($field, $index)

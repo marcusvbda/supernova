@@ -6,6 +6,7 @@ use App\Http\Supernova\Application;
 use Illuminate\Pagination\Cursor;
 use Illuminate\Support\Facades\Blade;
 use Livewire\Component;
+use Livewire\Attributes\On;
 
 class Datatable extends Component
 {
@@ -166,10 +167,10 @@ class Datatable extends Component
         return $itemsPage;
     }
 
-    public function setSelectOption($val, $field)
+    #[On('filter-selected')]
+    public function fieldSelected($values)
     {
-        $this->filters[$field][] = $val;
-        $this->loadData();
+        $this->filters[data_get($values, 'index')][] = data_get($values, 'value');
     }
 
     public function loadFilterOptions($field)
@@ -210,8 +211,11 @@ class Datatable extends Component
         $this->loadData();
     }
 
-    public function removeFilterOption($field, $value)
+    #[On('filter-removed')]
+    public function removeFilterOption($values)
     {
+        $field = data_get($values, 'index');
+        $value = data_get($values, 'value');
         $oldValues = data_get($this->filters, $field, []);
         $newValues = collect($oldValues)->filter(fn ($item) => $item != $value);
         $this->filters[$field] = $newValues->count() > 0 ? $newValues->toArray() : [];
