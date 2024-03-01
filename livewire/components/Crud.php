@@ -6,7 +6,7 @@ use App\Http\Supernova\Application;
 use Livewire\Component;
 use marcusvbda\supernova\FIELD_TYPES;
 use Livewire\Attributes\Lazy;
-use Livewire\WithFileUploads;
+use marcusvbda\supernova\traits\WithFileUploads;
 
 #[Lazy]
 class Crud extends Component
