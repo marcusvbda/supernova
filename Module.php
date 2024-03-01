@@ -111,7 +111,7 @@ class Module
     {
         $sub = $this->subMenu();
         $menu = $this->name()[1];
-        $url = route("supernova.modules.index", ["module" => strtolower($this->id())]);
+        $url = "/" . $this->id();
         return $sub ? "$sub.$menu{href='$url'}" : "$menu{href='$url'}";
     }
 
