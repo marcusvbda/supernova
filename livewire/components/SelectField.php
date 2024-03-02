@@ -20,10 +20,12 @@ class SelectField extends Component
     public $type;
     public $entity = null;
     public $reload;
+    public $lazy;
     public $crudType = 'details';
 
     public function placeholder()
     {
+        if (!$this->lazy) return "<div></div>";
         return view('supernova-livewire-views::skeleton', ['size' => '38px']);
     }
 
