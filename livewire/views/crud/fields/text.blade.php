@@ -1,8 +1,9 @@
 @php
     $formIndex = 'values.' . data_get($field, 'field');
+    $wireKey = @$wireKey ? $wireKey : uniqid();
 @endphp
-<div>
-    <input type="{{ $type }}" wire:model.blur="{{ $formIndex }}" x-mask="{{ data_get($field, 'mask', '') }}"
+<section class="flex flex-col" id="{{ $wireKey }}" wire:ignore>
+    <input type="{{ $type }}" wire:model.defer="{{ $formIndex }}" x-mask="{{ data_get($field, 'mask', '') }}"
         class="block w-full
         rounded-md border py-1.5 text-gray-900 shadow-sm placeholder:text-gray-400 sm:text-sm sm:leading-6 px-3
         dark:bg-gray-800 dark:border-gray-800 dark:text-gray-50
@@ -12,4 +13,4 @@
             {{ $message }}
         </div>
     @enderror
-</div>
+</section>

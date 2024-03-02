@@ -56,10 +56,11 @@
                                 $type = data_get($field, 'type');
                                 $component = data_get($field, 'component');
                                 $fieldBlade = "supernova-livewire-views::crud.fields.$type";
+                                $wireKey = $field->field . '_' . uniqid();
                             @endphp
                             @if (!$component)
                                 @if (View::exists($fieldBlade))
-                                    @include($fieldBlade, ['field' => $field])
+                                    @include($fieldBlade, ['field' => $field, 'wireKey' => $wireKey])
                                 @else
                                     {!! $appModule->processFieldDetail($entity, $field) !!}
                                 @endif

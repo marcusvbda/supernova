@@ -4,51 +4,58 @@ namespace marcusvbda\supernova\livewire\components;
 
 use App\Http\Supernova\Application;
 use Livewire\Component;
+use Livewire\Attributes\Lazy;
 
+#[Lazy]
 class SelectField extends Component
 {
     public $index;
-    public $all_is_selected;
     public $limit;
     public $selected;
+    public $all_is_selected;
     public $option_size;
     public $options = [];
-    public $loaded_options = false;
     public $moduleId;
     public $type;
     public $entity = null;
     public $crudType = 'details';
 
+    public function placeholder()
+    {
+        return view('supernova-livewire-views::skeleton', ['size' => '38px']);
+    }
+
     public function render()
     {
+        $this->loadOptions();
         return view('supernova-livewire-views::select-field');
     }
 
     public function loadOptions()
     {
-        $module = $this->getAppModule();
-        if ($this->type === "filter") {
-            $columns = $module->getDataTableVisibleColumns();
-            $column = collect($columns)->first(fn ($col) => $col->name == $this->index);
-            $filter_options_callback = $column->filter_options_callback;
-            if ($filter_options_callback && is_callable($filter_options_callback)) {
-                $this->options = $filter_options_callback();
+        $expiresAt = now()->addDays(1);
+        $this->options = cache()->remember($this->crudType . ":" . $this->index, $expiresAt, function () {
+            $module = $this->getAppModule();
+            if ($this->type === "filter") {
+                $columns = $module->getDataTableVisibleColumns();
+                $column = collect($columns)->first(fn ($col) => $col->name == $this->index);
+                $filter_options_callback = $column->filter_options_callback;
+                if ($filter_options_callback && is_callable($filter_options_callback)) {
+                    return  $filter_options_callback();
+                }
+                return $column->filter_options;
             } else {
-                $this->options = $column->filter_options;
+                $fields = $this->allFields();
+                $field = collect($fields)->first(function ($f) {
+                    return $f->field == $this->index;
+                });
+                $options_callback = $field->options_callback;
+                if ($options_callback && is_callable($options_callback)) {
+                    return $options_callback();
+                }
+                return $field->options;
             }
-        } else {
-            $fields = $this->allFields();
-            $field = collect($fields)->first(function ($f) {
-                return $f->field == $this->index;
-            });
-            $options_callback = $field->options_callback;
-            if ($options_callback && is_callable($options_callback)) {
-                $this->options = $options_callback();
-            } else {
-                $this->options = $field->options;
-            }
-        }
-        $this->loaded_options = true;
+        });
     }
 
     public function allFields()

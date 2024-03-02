@@ -108,10 +108,23 @@ class Field
                 $this->uploadPath = $path;
             }
             $this->previewCallback = function ($file) {
-                // $url = $file->temporaryUrl();
-                // $name = $file->getClientOriginalName();
+                if (is_array($file)) {
+                    $id = data_get($file, "id");
+                    $path = data_get($file, "path");
+                    $disk = data_get($file, "disk");
+                    $name = data_get($file, "original_name");
+                    $extension = data_get($file, "extension");
+                    $path = str_replace("/", "-", $path);
+                    $fileName = $path . "-" . $id . "." . $extension;
+                    $url = route("supernova.modules.upload-download", ["disk" => $disk, "file" => $fileName]);
+                } else {
+                    $url = $file->temporaryUrl();
+                    $name = $file->getClientOriginalName();
+                }
                 return <<<BLADE
-                   teste
+                    <a href="$url" target="_BLANK" title="$name">
+                        <img src="$url" alt="$name" class="w-40 h-40 rounded border border-gray-300"/>
+                    </a>
                 BLADE;
             };
 
@@ -206,7 +219,7 @@ class Field
         return $this;
     }
 
-    public function multiple($limit = INF): Field
+    public function multiple($limit = 9999999999): Field
     {
         $this->multiple = true;
         $this->limit = $limit;

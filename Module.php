@@ -17,15 +17,35 @@ class Module
         return 'qty:' . $this->id();
     }
 
+    public function getCacheListKey(): string
+    {
+        return 'list:' . $this->id();
+    }
+
+    public function getCacheCreateKey(): string
+    {
+        return 'create:' . $this->id();
+    }
+
+    public function getCacheEditKey(): string
+    {
+        return 'edit:' . $this->id();
+    }
+
+
     public function clearCacheQty(): void
     {
         cache()->forget($this->getCacheQtyKey());
+        cache()->forget($this->getCacheListKey());
+        cache()->forget($this->getCacheCreateKey());
+        cache()->forget($this->getCacheEditKey());
     }
 
     public function getCachedQty(): int
     {
-        $cacheTime = 60 * 24;
-        return cache()->remember($this->getCacheQtyKey(), $cacheTime, function () {
+        $expiresAt = now()->addDays(1);
+
+        return cache()->remember($this->getCacheQtyKey(), $expiresAt, function () {
             return $this->makeModel()->count();
         });
     }
