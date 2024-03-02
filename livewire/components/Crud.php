@@ -28,7 +28,7 @@ class Crud extends Component
 
     public function placeholder()
     {
-        return view('supernova-livewire-views::skeleton', ['size' => '500px']);
+        return view('supernova-livewire-views::skeleton', ['size' => '500px', 'class' => 'mt-4']);
     }
 
     public function mount()

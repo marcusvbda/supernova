@@ -6,8 +6,10 @@ use App\Http\Supernova\Application;
 use Illuminate\Pagination\Cursor;
 use Illuminate\Support\Facades\Blade;
 use Livewire\Component;
+use Livewire\Attributes\Lazy;
 use Livewire\Attributes\On;
 
+#[Lazy]
 class Datatable extends Component
 {
     public $module;
@@ -53,7 +55,7 @@ class Datatable extends Component
 
     public function placeholder()
     {
-        return view('supernova-livewire-views::skeleton', ['size' => '500px']);
+        return view('supernova-livewire-views::skeleton', ['size' => '500px', 'class' => 'mt-4']);
     }
 
     private function initializeModule()

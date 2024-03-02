@@ -2,6 +2,16 @@
     $fieldIndex = data_get($field, 'field');
     $formIndex = 'values.' . $fieldIndex;
     $wireKey = @$wireKey ? $wireKey : uniqid();
+    $lazy = true;
+    $reload = true;
+    $cacheKey = $crudType . ':' . $fieldIndex;
+    if (Cache::has($cacheKey)) {
+        $lazy = false;
+        $reload = false;
+        $initOptions = Cache::get($cacheKey);
+    } else {
+        $initOptions = [];
+    }
 @endphp
 <section class="flex flex-col" id="{{ $wireKey }}" class="flex flex-col">
     @livewire(
@@ -15,6 +25,9 @@
             'type' => 'field',
             'crudType' => $crudType,
             'entity' => @$entity,
+            'initOptions' => $initOptions,
+            'lazy' => $lazy,
+            'reload' => $reload,
         ],
         key($wireKey)
     )

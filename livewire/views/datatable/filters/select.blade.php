@@ -1,5 +1,15 @@
 @php
     $wireKey = $field . '-' . uniqid();
+    $lazy = true;
+    $reload = true;
+    $cacheKey = 'list:' . $field;
+    if (Cache::has($cacheKey)) {
+        $lazy = false;
+        $reload = false;
+        $initOptions = Cache::get($cacheKey);
+    } else {
+        $initOptions = [];
+    }
 @endphp
 <section class="flex flex-col" id="{{ $wireKey }}" class="flex flex-col" id="{{ $wireKey }}">
     @livewire(
@@ -11,6 +21,9 @@
             'moduleId' => $module,
             'type' => 'filter',
             'crudType' => 'list',
+            'initOptions' => $initOptions,
+            'lazy' => $lazy,
+            'reload' => $reload,
         ],
         key($wireKey)
     )

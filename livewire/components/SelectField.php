@@ -15,9 +15,11 @@ class SelectField extends Component
     public $all_is_selected;
     public $option_size;
     public $options = [];
+    public $initOptions = [];
     public $moduleId;
     public $type;
     public $entity = null;
+    public $reload;
     public $crudType = 'details';
 
     public function placeholder()
@@ -33,6 +35,10 @@ class SelectField extends Component
 
     public function loadOptions()
     {
+        if (!$this->reload) {
+            $this->options = $this->initOptions;
+            return;
+        }
         $expiresAt = now()->addDays(1);
         $this->options = cache()->remember($this->crudType . ":" . $this->index, $expiresAt, function () {
             $module = $this->getAppModule();
