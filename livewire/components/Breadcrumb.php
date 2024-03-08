@@ -19,10 +19,10 @@ class Breadcrumb extends Component
         $application = app()->make(config("supernova.application", Application::class));
         $route = request()->route();
         $currentRoute = $route->getName();
-        $this->items[] = [
+        array_unshift($this->items, [
             "title" => $application->homeTitle(),
-            "route" => route("supernova.home"),
-        ];
+            "route" => route("supernova.home")
+        ]);
         if ($currentRoute != "supernova.home" && $this->moduleId) {
             $module = $application->getModule($this->moduleId, false);
             if ($currentRoute === "supernova.modules.index") {
