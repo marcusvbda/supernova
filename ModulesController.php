@@ -43,7 +43,6 @@ class ModulesController extends Controller
 
     public function index($module): View
     {
-        dd($module);
         $module = $this->application->getModule($module);
         if (!$module->canViewIndex()) abort(403);
         return $module->index();
