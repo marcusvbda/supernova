@@ -79,7 +79,7 @@ class InstallCommand extends Command
         $this->info('Installing supernova...');
         sleep(2);
         $this->makeEnvFile();
-        // $this->createModels();
+        $this->createModels();
         $this->createModules();
         $this->info('To finish run :');
         $this->info('php artisan migrate');

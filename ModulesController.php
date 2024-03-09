@@ -5,6 +5,8 @@ namespace marcusvbda\supernova;
 use App\Http\Controllers\Controller;
 use App\Http\Supernova\Application;
 use Auth;
+use Illuminate\Http\JsonResponse;
+use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\View\View;
 
@@ -41,6 +43,7 @@ class ModulesController extends Controller
 
     public function index($module): View
     {
+        dd($module);
         $module = $this->application->getModule($module);
         if (!$module->canViewIndex()) abort(403);
         return $module->index();
@@ -113,5 +116,15 @@ class ModulesController extends Controller
         $file = Storage::disk($disk)->get($path . "/" . $id);
         if (!$file) abort(404);
         return response($file)->header('Content-Type', 'image/' . $extension);
+    }
+
+    public function apiLogin(Request $request): JsonResponse
+    {
+        if (!Auth::attempt($request->only('email', 'password'))) {
+            return response()->json(['message' => __('auth.failed')], 422);
+        }
+        $user = Auth::user();
+        $token = $user->createToken('client');
+        return response()->json(['token' => $token->plainTextToken]);
     }
 }
