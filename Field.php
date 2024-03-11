@@ -13,6 +13,7 @@ class Field
     public $query;
     public $component;
     public $limit = 1;
+    public $rows = 6;
     public $multiple = false;
     public $detailCallback;
     public $mask = "";
@@ -223,6 +224,12 @@ class Field
     {
         $this->multiple = true;
         $this->limit = $limit;
+        return $this;
+    }
+
+    public function rows($rows): Field
+    {
+        $this->rows = $rows;
         return $this;
     }
 }
