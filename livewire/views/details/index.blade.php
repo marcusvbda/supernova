@@ -56,7 +56,7 @@
                                 $component = $field->component;
                             @endphp
                             @if (!$component)
-                                {!! $values[$field->field] !!}
+                                {!! nl2br($values[$field->field]) !!}
                             @else
                                 {!! $component($entity, $values, 'details') !!}
                             @endif
