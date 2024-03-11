@@ -19,6 +19,7 @@ class SelectField extends Component
     public $moduleId;
     public $type;
     public $entity = null;
+    public $disabled = false;
     public $reload;
     public $lazy;
     public $crudType = 'details';

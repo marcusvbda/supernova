@@ -12,6 +12,7 @@
     x-on:livewire-upload-progress="progress = $event.detail.progress">
     @if ($limit > count($selected) || !$limit)
         <input type="file" wire:model="uploadingValues.{{ $fieldIndex }}"
+            @if (data_get($field, 'disabled')) disabled @endif
             class="block w-full rounded-md border py-1.5 text-gray-900 shadow-sm placeholder:text-gray-400 sm:text-sm sm:leading-6 px-3
    dark:bg-gray-800 dark:border-gray-800 dark:text-gray-50
    @error($formIndex) {{ 'dark:border-red-500' }} @enderror">

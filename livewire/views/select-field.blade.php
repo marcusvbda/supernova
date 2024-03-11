@@ -5,6 +5,7 @@
     <div class="relative">
         @if (!$all_is_selected && ($limit ? count($selected) < $limit : true))
             <select wire:change="changed($event.target.value);$event.target.value = '';"
+                @if ($disabled) disabled @endif
                 class="lock pl-4 pr-10 w-full bg-white rounded-md border font-normal py-1.5 text-gray-900 shadow-sm placeholder:text-gray-400 sm:text-sm sm:leading-6 px-3 dark:bg-gray-800 dark:border-gray-800 dark:text-gray-50 {{ @$extraClass ? $extraClass : '' }}">
                 <option></option>
                 @foreach ($options as $option)

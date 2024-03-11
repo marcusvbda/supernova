@@ -28,6 +28,7 @@
             'initOptions' => $initOptions,
             'lazy' => $lazy,
             'reload' => $reload,
+            'disabled' => $disabled,
         ],
         key($wireKey)
     )

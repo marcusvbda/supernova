@@ -11,6 +11,7 @@ class Field
     public $uploadDisk;
     public $model;
     public $query;
+    public $disabled = false;
     public $component;
     public $limit = 1;
     public $rows = 6;
@@ -230,6 +231,12 @@ class Field
     public function rows($rows): Field
     {
         $this->rows = $rows;
+        return $this;
+    }
+
+    public function disabled($val = true): Field
+    {
+        $this->disabled = $val;
         return $this;
     }
 }
