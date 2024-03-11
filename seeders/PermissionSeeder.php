@@ -43,7 +43,7 @@ class PermissionSeeder extends Seeder
         $createdPermissions = [];
         DB::beginTransaction();
         PermissionType::where('name', $type)->delete();
-        $ids = Permission::where('type', $type)->pluck('id')->toArray();
+        $ids = PermissionType::where('name', $type)->pluck('id')->toArray();
         DB::table('access_group_permissions')->whereIn('permission_id', $ids)->delete();
         Permission::whereIn('id', $ids)->delete();
         DB::commit();

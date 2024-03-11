@@ -17,6 +17,11 @@ class CounterCard extends Component
         px']);
     }
 
+    public function goToModule()
+    {
+        return redirect()->route("supernova.modules.index",['module' => $this->module]);
+    }
+
     public function render()
     {
         $application = app()->make(config("supernova.application", Application::class));
@@ -24,9 +29,9 @@ class CounterCard extends Component
         $name = $module->name()[1];
         $content = $module->getCachedQty();
         $cardCounterReloadTime = $application->cardCounterReloadTime();
-        $actions = "wire:poll.{$cardCounterReloadTime}s";
+        $actions = "wire:poll.{$cardCounterReloadTime}s wire:click='goToModule'";
         return <<<BLADE
-            <div class="bg-white dark:bg-gray-800 p-6 rounded-lg shadow-sm w-full" $actions>
+            <div class="bg-white dark:bg-gray-800 p-6 rounded-lg shadow-sm w-full cursor-pointer" $actions>
                 <h2 class="text-xl font-bold text-gray-800 dark:text-gray-50 mb-3">
                     $name
                 </h2>
