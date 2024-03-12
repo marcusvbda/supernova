@@ -19,7 +19,7 @@ class CounterCard extends Component
 
     public function goToModule()
     {
-        return redirect()->route("supernova.modules.index",['module' => $this->module]);
+        return redirect()->route("supernova.modules.index", ['module' => $this->module]);
     }
 
     public function render()
@@ -27,7 +27,7 @@ class CounterCard extends Component
         $application = app()->make(config("supernova.application", Application::class));
         $module = $application->getModule($this->module);
         $name = $module->name()[1];
-        $content = $module->getCachedQty();
+        $content = $module->getQty();
         $cardCounterReloadTime = $application->cardCounterReloadTime();
         $actions = "wire:poll.{$cardCounterReloadTime}s wire:click='goToModule'";
         return <<<BLADE

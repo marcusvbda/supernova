@@ -48,19 +48,14 @@ class Module
 
     public function clearCacheQty(): void
     {
-        cache()->forget($this->getCacheQtyKey());
         cache()->forget($this->getCacheListKey());
         cache()->forget($this->getCacheCreateKey());
         cache()->forget($this->getCacheEditKey());
     }
 
-    public function getCachedQty(): int
+    public function getQty(): int
     {
-        $expiresAt = now()->addDays(1);
-
-        return cache()->remember($this->getCacheQtyKey(), $expiresAt, function () {
-            return $this->makeModel()->count();
-        });
+        return $this->makeModel()->count();
     }
 
     public function title($page): string
