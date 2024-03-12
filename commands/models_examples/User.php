@@ -34,4 +34,15 @@ class User extends Authenticatable
     {
         return $this->belongsTo(AccessGroup::class);
     }
+
+    public function hasPermission($permission)
+    {
+        if ($this->role === 'root') return true;
+        if ($this->access_group) {
+            return $this->access_group()->whereHas("permissions", function ($query) use ($permission) {
+                $query->where("key", $permission);
+            })->exists();
+        }
+        return false;
+    }
 }
