@@ -332,7 +332,7 @@ class Module
         return config("supernova.placeholder_no_data", "<span>   -   </span>");
     }
 
-    public function delete($entity): void
+    public function onDelete($entity): void
     {
         $entity->delete();
     }

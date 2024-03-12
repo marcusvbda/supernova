@@ -41,7 +41,7 @@ class Details extends Component
     public function deleteEntity()
     {
         $module = $this->getModule();
-        $module->delete($this->entity);
+        $module->onDelete($this->entity);
         $application = app()->make(config('supernova.application', Application::class));
         $application::message("success", "Registro deletado com sucesso");
         if ($this->parentId && $this->parentModule) {
