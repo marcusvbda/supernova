@@ -83,7 +83,7 @@ class Application
 
     public function icon(): string
     {
-        return "favicon.ico";
+        return "/favicon.ico";
     }
 
     public function getModule($module, $checkDeclaration = true): Module
