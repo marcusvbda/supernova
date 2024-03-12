@@ -5,6 +5,7 @@ namespace marcusvbda\supernova\livewire\components;
 use App\Http\Supernova\Application;
 use Livewire\Component;
 use Livewire\Attributes\Lazy;
+use Cache;
 
 #[Lazy]
 class SelectField extends Component
@@ -42,8 +43,7 @@ class SelectField extends Component
             $this->options = $this->initOptions;
             return;
         }
-        $expiresAt = now()->addDays(1);
-        $this->options = cache()->remember($this->crudType . ":" . $this->index, $expiresAt, function () {
+        $this->options = Cache::remember($this->crudType . ":" . $this->index, 60 * 60 * 24, function () {
             $module = $this->getAppModule();
             if ($this->type === "filter") {
                 $columns = $module->getDataTableVisibleColumns();
