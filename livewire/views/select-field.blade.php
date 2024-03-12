@@ -1,5 +1,10 @@
 @php
-    $all_is_selected = count($selected) > 0 && count($selected) == count($options);
+    $all_is_selected = false;
+    try {
+        $all_is_selected = is_array($selected) && (count($selected) > 0 && count($selected) == count($key2));
+    } catch (\Throwable $th) {
+        //
+    }
 @endphp
 <div class="relative">
     <div class="relative">
@@ -9,8 +14,8 @@
                 class="lock pl-4 pr-10 w-full bg-white rounded-md border font-normal py-1.5 text-gray-900 shadow-sm placeholder:text-gray-400 sm:text-sm sm:leading-6 px-3 dark:bg-gray-800 dark:border-gray-800 dark:text-gray-50 {{ @$extraClass ? $extraClass : '' }}">
                 <option></option>
                 @foreach ($options as $option)
-                    @if (!in_array($option['value'], $selected))
-                        <option value="{{ $option['value'] }}">{{ $option['label'] }}</option>
+                    @if (!in_array(data_get($option, 'value'), $selected))
+                        <option value="{{ data_get($option, 'value') }}">{{ data_get($option, 'label') }}</option>
                     @endif
                 @endforeach
             </select>

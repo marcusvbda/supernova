@@ -28,7 +28,7 @@
             'initOptions' => $initOptions,
             'lazy' => $lazy,
             'reload' => $reload,
-            'disabled' => $disabled,
+            'disabled' => data_get($field, 'disabled'),
         ],
         key($wireKey)
     )

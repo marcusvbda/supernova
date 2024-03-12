@@ -95,7 +95,7 @@ class SelectField extends Component
     {
         $this->dispatch($this->type . "-selected", [
             "value" => $value,
-            "index" => $this->index
+            "index" => $this->index,
         ]);
         $this->selected[] = $value;
     }

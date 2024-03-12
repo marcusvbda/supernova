@@ -104,9 +104,13 @@ class Field
             };
 
             $this->options_callback = function () {
-                return $this->model->orderBy(data_get($this->option_keys, 'label'), "asc")->get()->map(function ($row) {
-                    return ["value" => $row->{data_get($this->option_keys, 'value')}, "label" => $row->{data_get($this->option_keys, 'label')}];
-                })->toArray();
+                if ($this->model) {
+                    return $this->model->orderBy(data_get($this->option_keys, 'label'), "asc")->get()->map(function ($row) {
+                        return ["value" => $row->{data_get($this->option_keys, 'value')}, "label" => $row->{data_get($this->option_keys, 'label')}];
+                    })->toArray();
+                } else {
+                    return $this->options;
+                }
             };
         } elseif ($this->type === FIELD_TYPES::UPLOAD->value) {
             $this->uploadDisk = $relation ? $relation : config("filesystems.default");
@@ -218,9 +222,11 @@ class Field
             }, $options);
         } else {
             $this->model = app()->make($options);
-            $this->options = $this->model->orderBy(data_get($this->option_keys, 'label'), "asc")->get()->map(function ($row) {
-                return ["value" => $row->{data_get($this->option_keys, 'value')}, "label" => $row->{data_get($this->option_keys, 'label')}];
-            })->toArray();
+            if ($this->model) {
+                $this->options = $this->model->orderBy(data_get($this->option_keys, 'label'), "asc")->get()->map(function ($row) {
+                    return ["value" => $row->{data_get($this->option_keys, 'value')}, "label" => $row->{data_get($this->option_keys, 'label')}];
+                })->toArray();
+            }
         }
         return $this;
     }
