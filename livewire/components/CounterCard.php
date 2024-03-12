@@ -27,7 +27,7 @@ class CounterCard extends Component
         $application = app()->make(config("supernova.application", Application::class));
         $module = $application->getModule($this->module);
         $name = $module->name()[1];
-        $content = $module->getQty();
+        $content = $module->getCachedQty();
         $cardCounterReloadTime = $application->cardCounterReloadTime();
         $actions = "wire:poll.{$cardCounterReloadTime}s wire:click='goToModule'";
         return <<<BLADE
