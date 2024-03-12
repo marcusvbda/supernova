@@ -13,6 +13,7 @@
             'queryInit' => @$queryInit,
             'checkDeclaration' => @$checkDeclaration ? true : false,
             'key' => $wireKey,
+            'parentId' => @$parentId,
         ],
         key($wireKey)
     )

@@ -56,7 +56,11 @@ class Field
             $parentModule = app()->make($field);
             $this->field = $parentModule->id();
             $this->type = FIELD_TYPES::MODULE->value;
-            $this->query = fn ($row) => @$row->{$this->field} ? $row->{$this->field}() : $row;
+            $field = $this->field;
+            $this->query = function ($row) use ($field) {
+                $camelField = lcfirst(str_replace(" ", "", ucwords(str_replace("-", " ", $field))));
+                return @$row->{$camelField} ? $row->{$camelField}() : $row;
+            };
         }
     }
 

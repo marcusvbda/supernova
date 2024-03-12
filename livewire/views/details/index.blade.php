@@ -17,16 +17,16 @@
         <h4
             class="text-2xl md:text-3xl text-neutral-800 font-bold dark:text-neutral-200 flex items-center gap-3 flex justify-between flex-col md:flex-row gap-2 md:gap-3 mt-6 mb-2">
             <span class="order-2 md:order-1">{{ data_get($panel, 'label') }}</span>
-            @if ($key === 0 && ($canEdit || $canDelete))
+            @if (($key === 0 && ($canEdit || $canDelete)) || @$parentId)
                 <div class="text-sm order-1 flex justify-end">
                     <div>
-                        @if ($canEdit)
+                        @if ($canEdit || @$parentId)
                             <button type="button" wire:click="redirectToEdit" wire:loading.attr="disabled"
                                 class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-6 rounded transition dark:bg-gray-800 hover:dark:bg-gray-900">
                                 Editar
                             </button>
                         @endif
-                        @if ($canDelete)
+                        @if ($canDelete || @$parentId)
                             <button type="button" wire:click="deleteEntity" wire:loading.attr="disabled"
                                 wire:confirm="Tem certeza que deseja excluir?"
                                 class="bg-red-700 hover:bg-red-800 border text-white font-bold py-2 px-6 rounded transition dark:bg-gray-800 hover:dark:bg-gray-900 dark:hover:text-red-700">
@@ -100,6 +100,7 @@
                     'queryInit' => $module . '.' . $entity->id . '.' . $field->field,
                     'checkDeclaration' => false,
                     'wireKey' => $key . '-' . $fKey,
+                    'parentId' => $entity->id,
                 ])
             @endforeach
         </div>

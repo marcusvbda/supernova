@@ -7,6 +7,19 @@ use  Illuminate\View\View;
 
 class Module
 {
+    public $defaultPermissions = [
+        "view_index" => true,
+        "view_details" => true,
+        "create" => true,
+        "edit" => true,
+        "delete" => true
+    ];
+
+    public function permissions()
+    {
+        return $this->defaultPermissions;
+    }
+
     public function model(): string
     {
         return "your model here ...";
@@ -87,7 +100,8 @@ class Module
 
     public function canViewIndex(): bool
     {
-        return true;
+        $permissions = array_merge($this->defaultPermissions, $this->permissions());
+        return $permissions["view_index"];
     }
 
     public function details($entity): View
@@ -124,11 +138,13 @@ class Module
 
     public function subMenu(): ?string
     {
+        if (!$this->canViewIndex()) return null;
         return null;
     }
 
-    public function menu(): string
+    public function menu(): ?string
     {
+        if (!$this->canViewIndex()) return null;
         $sub = $this->subMenu();
         $menu = $this->name()[1];
         $url = "/" . $this->id();
@@ -151,7 +167,8 @@ class Module
 
     public function canCreate(): bool
     {
-        return true;
+        $permissions = array_merge($this->defaultPermissions, $this->permissions());
+        return $permissions["create"];
     }
 
     public function dataTable(): array
@@ -185,22 +202,24 @@ class Module
 
     public function canEdit(): bool
     {
-        return true;
+        $permissions = array_merge($this->defaultPermissions, $this->permissions());
+        return $permissions["edit"];
     }
 
     public function canEditRow($row): bool
     {
-        return true;
+        return $this->canEdit();
     }
 
     public function canDelete(): bool
     {
-        return true;
+        $permissions = array_merge($this->defaultPermissions, $this->permissions());
+        return $permissions["delete"];
     }
 
     public function canDeleteRow($row): bool
     {
-        return true;
+        return $this->canDelete();
     }
 
     public function getDataTableVisibleColumns(): array
@@ -385,8 +404,9 @@ class Module
             $application = app()->make(config('supernova.application', Application::class));
             $parentModule = $application->getModule($parent_module, false);
             $relation = $this->id();
+            $camelRelation = lcfirst(str_replace(" ", "", ucwords(str_replace("-", " ", $relation))));
             $parentModel = $parentModule->makeModel()->findOrFail($parent_id);
-            $model = $id ? $parentModel->{$relation}()->findOrFail($id) : $parentModel->{$relation}()->make();
+            $model = $id ? $parentModel->{$camelRelation}()->findOrFail($id) : $parentModel->{$camelRelation}()->make();
             $model->fill($values['save']);
             $model->save();
 

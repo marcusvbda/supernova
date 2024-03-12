@@ -86,6 +86,7 @@
                         'queryInit' => $module . '.' . $entity->id . '.' . $field->field,
                         'checkDeclaration' => false,
                         'wireKey' => $key . '-' . $fKey,
+                        'parentId' => $entity->id,
                     ])
                 @endforeach
             </div>

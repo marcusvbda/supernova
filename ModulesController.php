@@ -70,9 +70,6 @@ class ModulesController extends Controller
     public function fieldCreate($parentModule, $parentId, $fieldModule)
     {
         $module = $this->application->getModule($fieldModule, false);
-        if (!$module->canCreate()) {
-            abort(403);
-        }
         $createView = $module->create();
         $createView->parent_module = $parentModule;
         $createView->parent_id = $parentId;
@@ -82,9 +79,6 @@ class ModulesController extends Controller
     public function fieldDetails($parentModule, $parentId, $fieldModule, $fieldModuleId)
     {
         $module = $this->application->getModule($fieldModule, false);
-        if (!$module->canViewIndex()) {
-            abort(403);
-        }
         $target = $module->makeModel()->findOrFail($fieldModuleId);
         $detailsView = $module->details($target);
         $detailsView->parent_module = $parentModule;
@@ -95,9 +89,6 @@ class ModulesController extends Controller
     public function fieldEdit($parentModule, $parentId, $fieldModule, $fieldModuleId)
     {
         $module = $this->application->getModule($fieldModule, false);
-        if (!$module->canEdit()) {
-            abort(403);
-        }
         $target = $module->makeModel()->findOrFail($fieldModuleId);
         $editView = $module->edit($target);
         $editView->parent_module = $parentModule;

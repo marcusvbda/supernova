@@ -40,6 +40,7 @@ class Datatable extends Component
     public $btnCreateText = "Create";
     public $moduleUrl = "/";
     public $queryInit = null;
+    public $parentId = null;
 
     public function updateFilterValue($field, $value, $label, $type)
     {
