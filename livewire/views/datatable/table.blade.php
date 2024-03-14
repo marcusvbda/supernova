@@ -1,6 +1,6 @@
 <div class="bg-gray-50 dark:bg-gray-600  rounded-lg text-gray-700 border border-gray-200 dark:border-gray-700 dark:text-gray-50"
     x-data="datatable">
-    <div class="overflow-x-auto relative" wire:loading.class="opacity-50 overflow-x-hidden">
+    <div class="overflow-x-auto relative datatable-fixed-header" wire:loading.class="opacity-50 overflow-x-hidden">
         <div wire:loading>
             <div class="flex items-center justify-center w-full cursor-wait"
                 style="position: absolute;inset: 0;background-color: #77777729;z-index=9;display:flex;align-items-center;justify-content:center;z-index: 9;">
@@ -145,6 +145,100 @@
         Alpine.data('datatable', () => ({
             editClick(id) {
                 window.location.href = `{{ $moduleUrl }}/${id}/edit`;
+            },
+            refresh() {
+                alert(12)
+            },
+            init() {
+                setTimeout(() => {
+                    this.createFixedHeader()
+                });
+            },
+            createFooter(el, uniqueId) {
+                const theadOriginal = el.querySelector('thead');
+                const newTable = document.createElement('table');
+                newTable.classList.add('fixed-header-clone-' + uniqueId);
+                const thead = theadOriginal.cloneNode(true);
+                if (thead.querySelectorAll('tr').length > 1) {
+                    thead.querySelectorAll('tr')[1].remove();
+                }
+                newTable.appendChild(thead);
+                const ths = thead.querySelectorAll('th');
+                const thsOriginal = theadOriginal.querySelectorAll('th');
+                ths.forEach((th, i) => {
+                    th.style.width = thsOriginal[i].offsetWidth + 'px';
+                });
+                newTable.style.position = 'sticky';
+                newTable.style.top = '0';
+                newTable.style.zIndex = '999';
+                el.appendChild(newTable);
+            },
+            createFixedHeader() {
+                const els = document.querySelectorAll('.datatable-fixed-header');
+                els.forEach(el => {
+                    const uniqueId = Math.random().toString(36).substring(7);
+                    const hasOverflowX = el.scrollWidth > el.clientWidth;
+                    if (hasOverflowX) {
+                        this.createFooter(el, uniqueId)
+                    } else {
+                        el.style.overflow = 'visible';
+                        this.actionFixedHeader(el, uniqueId);
+                        window.addEventListener('scroll', (ev) => {
+                            this.actionFixedHeader(el, uniqueId)
+                        });
+                    }
+                });
+            },
+            actionFixedHeader(el, uniqueId) {
+                const theadOriginal = el.querySelector('thead');
+                theadOriginal.classList.add('fixed-header-' + uniqueId);
+                const headHeight = document.querySelector(".fixed-header-" + uniqueId).offsetHeight
+                const elRect = el.getBoundingClientRect();
+                const scrollY = window.scrollY;
+                const limitToShow = elRect.top + scrollY;
+                const elHeight = elRect.height;
+                const limitToHide = limitToShow + elHeight;
+                const fixHeader = window.scrollY > (limitToShow + headHeight * .9) &&
+                    window
+                    .scrollY < (limitToHide - (headHeight / 2));
+
+                if (fixHeader) {
+                    if (!document.querySelector('.fixed-header-clone-' + uniqueId)) {
+                        const newTable = document.createElement('table');
+                        newTable.classList.add('fixed-header-clone-' + uniqueId,
+                            'border-bottom', 'border-b', 'border-gray-200',
+                            'dark:border-gray-700');
+                        const thead = theadOriginal.cloneNode(true);
+                        if (thead.querySelectorAll('tr').length > 1) {
+                            thead.querySelectorAll('tr')[1].remove();
+                        }
+                        newTable.appendChild(thead);
+                        const ths = thead.querySelectorAll('th');
+                        const thsOriginal = theadOriginal.querySelectorAll('th');
+                        ths.forEach((th, i) => {
+                            th.style.width = thsOriginal[i].offsetWidth + 'px';
+                        });
+                        newTable.style.position = 'sticky';
+                        newTable.style.top = '0';
+                        newTable.style.zIndex = '999';
+                        el.insertBefore(newTable, el.firstChild);
+
+                        window.addEventListener('resize', () => {
+                            const ths = thead.querySelectorAll('th');
+                            const thsOriginal = theadOriginal.querySelectorAll(
+                                'th');
+                            ths.forEach((th, i) => {
+                                th.style.width = thsOriginal[i]
+                                    .offsetWidth + 'px';
+                            });
+                        });
+                    }
+                } else {
+                    const thead = el.querySelector('.fixed-header-clone-' + uniqueId);
+                    if (thead) {
+                        thead.remove();
+                    }
+                }
             }
         }));
     </script>
