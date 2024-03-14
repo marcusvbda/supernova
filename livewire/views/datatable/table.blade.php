@@ -154,34 +154,20 @@
                     this.createFixedHeader()
                 });
             },
-            createFooter(el, uniqueId) {
-                const theadOriginal = el.querySelector('thead');
-                const newTable = document.createElement('table');
-                newTable.classList.add('fixed-header-clone-' + uniqueId);
-                const thead = theadOriginal.cloneNode(true);
-                if (thead.querySelectorAll('tr').length > 1) {
-                    thead.querySelectorAll('tr')[1].remove();
-                }
-                newTable.appendChild(thead);
-                const ths = thead.querySelectorAll('th');
-                const thsOriginal = theadOriginal.querySelectorAll('th');
-                ths.forEach((th, i) => {
-                    th.style.width = thsOriginal[i].offsetWidth + 'px';
-                });
-                newTable.style.position = 'sticky';
-                newTable.style.top = '0';
-                newTable.style.zIndex = '999';
-                el.appendChild(newTable);
-            },
             createFixedHeader() {
                 const els = document.querySelectorAll('.datatable-fixed-header');
                 els.forEach(el => {
-                    const uniqueId = Math.random().toString(36).substring(7);
+                    const uniqueId = "{{ $uniqueId }}"
                     const hasOverflowX = el.scrollWidth > el.clientWidth;
-                    if (hasOverflowX) {
-                        this.createFooter(el, uniqueId)
-                    } else {
+                    if (!hasOverflowX) {
                         el.style.overflow = 'visible';
+                        $wire.on("{{ $uniqueId }}-refreshed", () => {
+                            const thead = el.querySelector('.fixed-header-clone-' + uniqueId);
+                            if (thead) thead.remove();
+                            setTimeout(() => {
+                                this.actionFixedHeader(el, uniqueId);
+                            });
+                        });
                         this.actionFixedHeader(el, uniqueId);
                         window.addEventListener('scroll', (ev) => {
                             this.actionFixedHeader(el, uniqueId)

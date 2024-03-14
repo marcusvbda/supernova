@@ -41,6 +41,7 @@ class Datatable extends Component
     public $moduleUrl = "/";
     public $queryInit = null;
     public $parentId = null;
+    public $uniqueId = null;
 
     public function updateFilterValue($field, $value, $label, $type)
     {
@@ -133,6 +134,7 @@ class Datatable extends Component
         $this->totalPages = $this->totalPages == 0 ? 1 : $this->totalPages;
         $this->totalResults = $total;
         $this->hasItems = $total > 0;
+        $this->dispatch($this->uniqueId . "-refreshed");
     }
 
     public function removeFilter($field, $value)
@@ -229,5 +231,10 @@ class Datatable extends Component
     {
         $this->loadData();
         return view('supernova-livewire-views::datatable.index');
+    }
+
+    public function mount()
+    {
+        $this->uniqueId = uniqid();
     }
 }
