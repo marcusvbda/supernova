@@ -31,11 +31,6 @@ class Module
         return 'qty:' . $this->id();
     }
 
-    public function getCacheListKey(): string
-    {
-        return 'list:' . $this->id();
-    }
-
     public function getCacheCreateKey(): string
     {
         return 'create:' . $this->id();
@@ -46,11 +41,9 @@ class Module
         return 'edit:' . $this->id();
     }
 
-
     public function clearCacheQty(): void
     {
         Cache::forget($this->getCacheQtyKey());
-        Cache::forget($this->getCacheListKey());
         Cache::forget($this->getCacheCreateKey());
         Cache::forget($this->getCacheEditKey());
     }

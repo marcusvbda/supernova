@@ -10,6 +10,11 @@ use marcusvbda\supernova\livewire\components\CounterCard;
 use marcusvbda\supernova\livewire\components\Crud;
 use marcusvbda\supernova\livewire\components\Dashboard;
 use marcusvbda\supernova\livewire\components\Datatable;
+use marcusvbda\supernova\livewire\components\DatatableBody;
+use marcusvbda\supernova\livewire\components\DatatableGlobalFilter;
+use marcusvbda\supernova\livewire\components\DatatableHeader;
+use marcusvbda\supernova\livewire\components\DatatableHeaderFilter;
+use marcusvbda\supernova\livewire\components\DatatablePagination;
 use marcusvbda\supernova\livewire\components\Details;
 use marcusvbda\supernova\livewire\components\Login;
 use marcusvbda\supernova\livewire\components\Navbar;
@@ -136,6 +141,31 @@ class Application
     public function datatable(): string
     {
         return Datatable::class;
+    }
+
+    public function datatableGlobalFilter(): string
+    {
+        return DatatableGlobalFilter::class;
+    }
+
+    public function datatableHeader(): string
+    {
+        return DatatableHeader::class;
+    }
+
+    public function datatableHeaderFilter(): string
+    {
+        return DatatableHeaderFilter::class;
+    }
+
+    public function datatableBody(): string
+    {
+        return DatatableBody::class;
+    }
+
+    public function datatablePagination(): string
+    {
+        return DatatablePagination::class;
     }
 
     public function details(): string

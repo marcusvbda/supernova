@@ -6,6 +6,7 @@ use App\Http\Supernova\Application;
 use Livewire\Component;
 use Livewire\Attributes\Lazy;
 use Cache;
+use Livewire\Attributes\On;
 
 #[Lazy]
 class SelectField extends Component
@@ -24,6 +25,20 @@ class SelectField extends Component
     public $reload;
     public $lazy;
     public $crudType = 'details';
+    public $perPage = 10;
+    public $sort = '';
+
+    #[On('table:sort')]
+    public function setSort($perPage, $sort)
+    {
+        $this->sort = $sort;
+    }
+
+    #[On('table:perPage')]
+    public function setPerPage($perPage)
+    {
+        $this->perPage = +$perPage;
+    }
 
     public function placeholder()
     {
@@ -43,28 +58,28 @@ class SelectField extends Component
             $this->options = $this->initOptions;
             return;
         }
-        $this->options = Cache::remember($this->crudType . ":" . $this->index, 60 * 60 * 24, function () {
-            $module = $this->getAppModule();
-            if ($this->type === "filter") {
-                $columns = $module->getDataTableVisibleColumns();
-                $column = collect($columns)->first(fn ($col) => $col->name == $this->index);
-                $filter_options_callback = $column->filter_options_callback;
-                if ($filter_options_callback && is_callable($filter_options_callback)) {
-                    return  $filter_options_callback();
-                }
-                return $column->filter_options;
+        $module = $this->getAppModule();
+        if ($this->type === "filter") {
+            $columns = $module->getDataTableVisibleColumns();
+            $column = collect($columns)->first(fn ($col) => $col->name == $this->index);
+            $filter_options_callback = $column->filter_options_callback;
+            if ($filter_options_callback && is_callable($filter_options_callback)) {
+                $this->options =   $filter_options_callback();
             } else {
-                $fields = $this->allFields();
-                $field = collect($fields)->first(function ($f) {
-                    return $f->field == $this->index;
-                });
-                $options_callback = $field->options_callback;
-                if ($options_callback && is_callable($options_callback)) {
-                    return $options_callback();
-                }
-                return $field->options;
+                $this->options =  $column->filter_options;
             }
-        });
+        } else {
+            $fields = $this->allFields();
+            $field = collect($fields)->first(function ($f) {
+                return $f->field == $this->index;
+            });
+            $options_callback = $field->options_callback;
+            if ($options_callback && is_callable($options_callback)) {
+                $this->options =  $options_callback();
+            } else {
+                $this->options = $field->options;
+            }
+        }
     }
 
     public function allFields()
@@ -96,7 +111,7 @@ class SelectField extends Component
         $this->dispatch($this->type . "-selected", [
             "value" => $value,
             "index" => $this->index,
-        ]);
+        ], $this->perPage, $this->sort);
         $this->selected[] = $value;
     }
 
@@ -105,7 +120,7 @@ class SelectField extends Component
         $this->dispatch($this->type . "-removed", [
             "value" => $value,
             "index" => $this->index
-        ]);
+        ], $this->perPage, $this->sort);
         $this->selected = collect($this->selected)->filter(fn ($item) => $item != $value)->toArray();
     }
 }

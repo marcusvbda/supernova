@@ -7,7 +7,7 @@
                         d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"></path>
                 </svg>
             </div>
-            <input wire:model.live.debounce.1000ms="searchText" wire:loading.attr="disabled"
+            <input wire:model.live.debounce.1000ms="text" wire:loading.attr="disabled"
                 class="block px-10 w-full rounded-md border py-1.5 text-gray-900 shadow-sm placeholder:text-gray-400 sm:text-sm sm:leading-6 px-3 dark:bg-gray-800 dark:border-gray-800 dark:text-gray-50"
                 type="text">
             <div class="absolute inset-y-0 right-0 pr-2 flex items-center">

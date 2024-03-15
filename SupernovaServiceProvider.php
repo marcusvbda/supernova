@@ -48,6 +48,11 @@ class SupernovaServiceProvider extends ServiceProvider
     {
         Livewire::component('supernova::navbar', $this->novaApp->navbar());
         Livewire::component('supernova::datatable', $this->novaApp->datatable());
+        Livewire::component('supernova::datatable-global-filter', $this->novaApp->datatableGlobalFilter());
+        Livewire::component('supernova::datatable-header', $this->novaApp->datatableHeader());
+        Livewire::component('supernova::datatable-header-filter', $this->novaApp->datatableHeaderFilter());
+        Livewire::component('supernova::datatable-body', $this->novaApp->datatableBody());
+        Livewire::component('supernova::datatable-pagination', $this->novaApp->datatablePagination());
         Livewire::component('supernova::details', $this->novaApp->details());
         Livewire::component('supernova::select-field', $this->novaApp->selectField());
         Livewire::component('supernova::login', $this->novaApp->loginForm());
