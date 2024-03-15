@@ -27,6 +27,7 @@ class SelectField extends Component
     public $crudType = 'details';
     public $perPage = 10;
     public $sort = '';
+    public $refId = null;
 
     #[On('table:sort')]
     public function setSort($perPage, $sort)
@@ -108,7 +109,7 @@ class SelectField extends Component
 
     public function changed($value)
     {
-        $this->dispatch($this->type . "-selected", [
+        $this->dispatch($this->type . "-selected-" . $this->refId, [
             "value" => $value,
             "index" => $this->index,
         ], $this->perPage, $this->sort);
@@ -117,7 +118,7 @@ class SelectField extends Component
 
     public function removed($value)
     {
-        $this->dispatch($this->type . "-removed", [
+        $this->dispatch($this->type . "-removed-" . $this->refId, [
             "value" => $value,
             "index" => $this->index
         ], $this->perPage, $this->sort);

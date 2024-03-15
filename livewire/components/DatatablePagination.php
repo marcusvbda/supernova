@@ -4,7 +4,6 @@ namespace marcusvbda\supernova\livewire\components;
 
 use App\Http\Supernova\Application;
 use Livewire\Component;
-use Livewire\Attributes\On;
 
 class DatatablePagination extends Component
 {
@@ -20,12 +19,26 @@ class DatatablePagination extends Component
     public $nextCursor = null;
     public $hasNextCursor = false;
     public $cursor = null;
+    public $tableId = null;
+
+    public function getListeners()
+    {
+        return [
+            'table:setHasNextCursor-' . $this->tableId => 'setHasNextCursor',
+            'table:setHasPrevCursor-' . $this->tableId => 'setHasPrevCursor',
+            'table:setNextCursor-' . $this->tableId => 'setNextCursor',
+            'table:setPrevCursor-' . $this->tableId => 'setPrevCursor',
+            'table:setTotalResults-' . $this->tableId => 'setTotalResults',
+            'table:setTotalPages-' . $this->tableId => 'setTotalPages',
+            'table:setCurrentPage-' . $this->tableId => 'setCurrentPage',
+        ];
+    }
 
     public function nextPage($cursor)
     {
         $this->currentPage++;
         $this->cursor = $cursor;
-        $this->dispatch("table:loadCursor", $this->cursor, $this->perPage);
+        $this->dispatch("table:loadCursor-" . $this->tableId, $this->cursor, $this->perPage);
     }
 
     public function previousPage($cursor)
@@ -33,7 +46,7 @@ class DatatablePagination extends Component
         $this->currentPage--;
         $this->cursor = $cursor;
         if ($this->currentPage == 1) $this->cursor = null;
-        $this->dispatch("table:loadCursor", $this->cursor, $this->perPage);
+        $this->dispatch("table:loadCursor-" . $this->tableId, $this->cursor, $this->perPage);
     }
 
     private function makeApplication()
@@ -44,43 +57,36 @@ class DatatablePagination extends Component
         $this->perPage = $this->perPageOptions[0];
     }
 
-    #[On('table:setHasNextCursor')]
     public function setHasNextCursor($hasNextCursor)
     {
         $this->hasNextCursor = $hasNextCursor;
     }
 
-    #[On('table:setHasPrevCursor')]
     public function setHasPrevCursor($hasPrevCursor)
     {
         $this->hasPrevCursor = $hasPrevCursor;
     }
 
-    #[On('table:setNextCursor')]
     public function setNextCursor($nextCursor)
     {
         $this->nextCursor = $nextCursor;
     }
 
-    #[On('table:setPrevCursor')]
     public function setPrevCursor($prevCursor)
     {
         $this->prevCursor = $prevCursor;
     }
 
-    #[On('table:setTotalResults')]
     public function setTotalResults($totalResults)
     {
         $this->totalResults = $totalResults;
     }
 
-    #[On('table:setTotalPages')]
     public function setTotalPages($totalPages)
     {
         $this->totalPages = $totalPages;
     }
 
-    #[On('table:setCurrentPage')]
     public function setCurrentPage($currentPage)
     {
         $this->currentPage = $currentPage;
@@ -90,13 +96,13 @@ class DatatablePagination extends Component
     public function mount()
     {
         $this->makeApplication();
-        $this->dispatch("table:loadData");
+        $this->dispatch("table:loadData-" . $this->tableId);
     }
 
     public function updatedPerPage($value)
     {
         $this->currentPage = 1;
-        $this->dispatch("table:perPage", $value);
+        $this->dispatch("table:perPage-" . $this->tableId, $value);
     }
 
     public function render()

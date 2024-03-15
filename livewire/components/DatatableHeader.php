@@ -15,6 +15,7 @@ class DatatableHeader extends Component
     public $checkDeclaration = true;
     public $sort = '';
     public $perPage = 10;
+    public $tableId = null;
 
     private function makeApplication()
     {
@@ -24,7 +25,13 @@ class DatatableHeader extends Component
         $this->perPage = $this->perPageOptions[0];
     }
 
-    #[On('table:perPage')]
+    public function getListeners()
+    {
+        return [
+            'table:perPage-' . $this->tableId => 'setPerPage'
+        ];
+    }
+
     public function setPerPage($perPage)
     {
         $this->perPage = +$perPage;
@@ -52,7 +59,7 @@ class DatatableHeader extends Component
             $newDirection = $oldDirection == "desc" ? "asc" : "desc";
         }
         $this->sort = "{$newName}|{$newDirection}";
-        $this->dispatch('table:sort', $this->perPage, $this->sort);
+        $this->dispatch('table:sort-' . $this->tableId, $this->perPage, $this->sort);
     }
 
     public function render()

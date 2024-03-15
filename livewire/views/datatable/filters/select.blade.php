@@ -16,6 +16,7 @@
             'reload' => true,
             'perPage' => $perPage,
             'sort' => $sort,
+            'refId' => $tableId,
         ],
         key($wireKey)
     )

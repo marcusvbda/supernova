@@ -6,7 +6,6 @@ use App\Http\Supernova\Application;
 use Livewire\Component;
 use Illuminate\Pagination\Cursor;
 use Illuminate\Support\Facades\Blade;
-use Livewire\Attributes\On;
 
 class DatatableBody extends Component
 {
@@ -28,6 +27,7 @@ class DatatableBody extends Component
     public $moduleUrl = '';
     public $loaded = false;
     public $totalPages = 0;
+    public $tableId = null;
 
     public function placeholder()
     {
@@ -80,7 +80,20 @@ class DatatableBody extends Component
         $this->colspan = count($this->columns);
     }
 
-    #[On('table:sort')]
+    public function getListeners()
+    {
+        return [
+            'table:loadCursor-' . $this->tableId => 'loadCursor',
+            'table:sort-' . $this->tableId => 'tableSort',
+            'table:perPage-' . $this->tableId => 'setPerPage',
+            'table:filterUpdated-' . $this->tableId => 'setFilter',
+            'table:globalFilterUpdated-' . $this->tableId => 'setGlobalFilter',
+            'filter-selected-' . $this->tableId => 'fieldSelected',
+            'filter-updated-' . $this->tableId => 'filterUpdated',
+            'filter-removed-' . $this->tableId => 'removeFilterOption',
+        ];
+    }
+
     public function tableSort($perPage, $sort)
     {
         $this->perPage = $perPage;
@@ -89,7 +102,6 @@ class DatatableBody extends Component
         $this->loadData($this->perPage);
     }
 
-    #[On('table:loadCursor')]
     public function loadCursor($value, $perPage)
     {
         $this->cursor = $value;
@@ -97,7 +109,6 @@ class DatatableBody extends Component
         $this->loadData($this->perPage);
     }
 
-    #[On('table:perPage')]
     public function setPerPage($perPage)
     {
         $this->cursor = null;
@@ -105,7 +116,6 @@ class DatatableBody extends Component
         $this->loadData($this->perPage);
     }
 
-    #[On('table:filterUpdated')]
     public function setFilter($perPage, $sort, $filters)
     {
         $this->cursor = null;
@@ -115,7 +125,6 @@ class DatatableBody extends Component
         $this->loadData($this->perPage);
     }
 
-    #[On('table:globalFilterUpdated')]
     public function setGlobalFilter($perPage, $sort, $searchText)
     {
         $this->cursor = null;
@@ -125,7 +134,6 @@ class DatatableBody extends Component
         $this->loadData($this->perPage);
     }
 
-    #[On('filter-selected')]
     public function fieldSelected($values, $perPage, $sort)
     {
         $this->perPage = $perPage;
@@ -134,7 +142,6 @@ class DatatableBody extends Component
         $this->loadData($this->perPage);
     }
 
-    #[On('filter-updated')]
     public function filterUpdated($filters, $perPage, $sort)
     {
         $this->filters = $filters;
@@ -143,7 +150,6 @@ class DatatableBody extends Component
         $this->loadData($this->perPage);
     }
 
-    #[On('filter-removed')]
     public function removeFilterOption($values, $perPage, $sort)
     {
         $this->perPage = $perPage;
@@ -162,7 +168,7 @@ class DatatableBody extends Component
         $this->makeApplication();
         $sort = explode("|", $this->sort);
         if (!$this->cursor) {
-            $this->dispatch("table:setCurrentPage", 1);
+            $this->dispatch("table:setCurrentPage-" . $this->tableId, 1);
         }
         $query = $this->module->applyFilters($this->module->makeModel($this->queryInit), $this->searchText, $this->filters, $sort);
         $total = $query->count();
@@ -177,12 +183,12 @@ class DatatableBody extends Component
         $this->totalResults = $total;
         $this->hasItems = $total > 0;
         $this->loaded = true;
-        $this->dispatch("table:setTotalPages", $this->totalPages);
-        $this->dispatch("table:setTotalResults", $this->totalResults);
-        $this->dispatch("table:setPrevCursor", $this->prevCursor);
-        $this->dispatch("table:setNextCursor", $this->nextCursor);
-        $this->dispatch("table:setHasNextCursor", $this->hasNextCursor);
-        $this->dispatch("table:setHasPrevCursor", $this->hasPrevCursor);
+        $this->dispatch("table:setTotalPages-" . $this->tableId, $this->totalPages);
+        $this->dispatch("table:setTotalResults-" . $this->tableId, $this->totalResults);
+        $this->dispatch("table:setPrevCursor-" . $this->tableId, $this->prevCursor);
+        $this->dispatch("table:setNextCursor-" . $this->tableId, $this->nextCursor);
+        $this->dispatch("table:setHasNextCursor-" . $this->tableId, $this->hasNextCursor);
+        $this->dispatch("table:setHasPrevCursor-" . $this->tableId, $this->hasPrevCursor);
     }
 
     private function processItems($items): array

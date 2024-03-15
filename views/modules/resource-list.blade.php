@@ -23,6 +23,7 @@
         return $row;
     }, $module->getDataTableVisibleColumns());
     $filterable = collect($columns)->filter(fn($row) => $row['filterable'])->count() > 0;
+    $tableId = uniqid();
 @endphp
 <section class="flex flex-col" id="{{ $wireKey }}" wire:ignore>
     <h4 class="text-3xl text-neutral-800 font-bold dark:text-neutral-200 mt-3 mb-2 flex items-center gap-3 mt-6">
@@ -34,6 +35,7 @@
                 @livewire('supernova::datatable-global-filter', [
                     'moduleId' => $module->id(),
                     'sort' => $module->defaultSort(),
+                    'tableId' => $tableId,
                 ])
                 @if ($canCreate || @$parentId)
                     <a class="ml-auto cursor-pointer w-full md:w-auto" href="{{ $moduleUrl }}/create">
@@ -52,11 +54,13 @@
                             @livewire('supernova::datatable-header', [
                                 'moduleId' => $module->id(),
                                 'sort' => $module->defaultSort(),
+                                'tableId' => $tableId,
                             ])
                             @if ($filterable)
                                 @livewire('supernova::datatable-header-filter', [
                                     'moduleId' => $module->id(),
                                     'sort' => $module->defaultSort(),
+                                    'tableId' => $tableId,
                                 ])
                             @endif
                         </thead>
@@ -65,12 +69,14 @@
                             'sort' => $module->defaultSort(),
                             'queryInit' => @$queryInit,
                             'moduleUrl' => $moduleUrl,
+                            'tableId' => $tableId,
                         ])
                     </table>
                 </div>
                 @livewire('supernova::datatable-pagination', [
                     'moduleId' => $module->id(),
                     'sort' => $module->defaultSort(),
+                    'tableId' => $tableId,
                 ])
             </div>
         </div>

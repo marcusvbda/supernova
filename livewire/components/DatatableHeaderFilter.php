@@ -4,7 +4,6 @@ namespace marcusvbda\supernova\livewire\components;
 
 use App\Http\Supernova\Application;
 use Livewire\Component;
-use Livewire\Attributes\On;
 
 class DatatableHeaderFilter extends Component
 {
@@ -17,14 +16,41 @@ class DatatableHeaderFilter extends Component
     public $filterable = false;
     public $perPage = 10;
     public $sort = '';
+    public $tableId = null;
 
-    #[On('table:sort')]
+    public function getListeners()
+    {
+        return [
+            'table:perPage-' . $this->tableId => 'setPerPage',
+            'table:sort-' . $this->tableId => 'setSort',
+            'filter-selected-' . $this->tableId => 'fieldSelected',
+            'filter-removed-' . $this->tableId => 'removeFilterOption',
+        ];
+    }
+
+    public function removeFilterOption($values, $perPage, $sort)
+    {
+        $this->perPage = $perPage;
+        $this->sort = $sort;
+        $field = data_get($values, 'index');
+        $value = data_get($values, 'value');
+        $oldValues = data_get($this->filters, $field, []);
+        $newValues = collect($oldValues)->filter(fn ($item) => $item != $value);
+        $this->filters[$field] = $newValues->count() > 0 ? $newValues->toArray() : [];
+    }
+
+    public function fieldSelected($values, $perPage, $sort)
+    {
+        $this->perPage = $perPage;
+        $this->sort = $sort;
+        $this->filters[data_get($values, 'index')][] = data_get($values, 'value');
+    }
+
     public function setSort($perPage, $sort)
     {
         $this->sort = $sort;
     }
 
-    #[On('table:perPage')]
     public function setPerPage($perPage)
     {
         $this->perPage = +$perPage;
@@ -33,7 +59,7 @@ class DatatableHeaderFilter extends Component
     public function clearFilter($field)
     {
         data_set($this->filters, $field, null);
-        $this->dispatch('filter-updated', $this->filters, $this->perPage, $this->sort);
+        $this->dispatch('filter-updated-' . $this->tableId, $this->filters, $this->perPage, $this->sort);
     }
 
     private function makeApplication()
@@ -57,10 +83,16 @@ class DatatableHeaderFilter extends Component
         $this->filterable = collect($this->columns)->filter(fn ($row) => $row["filterable"])->count() > 0;
     }
 
+    // public function setFilter($filters)
+    // {
+    //     // dd($filters);
+    //     $this->filters = $filters;
+    // }
+
     public function updated($field)
     {
         if (str_starts_with($field, "filters.")) {
-            $this->dispatch('filter-updated', $this->filters, $this->perPage, $this->sort);
+            $this->dispatch('filter-updated-' . $this->tableId, $this->filters, $this->perPage, $this->sort);
         }
     }
 

@@ -4,7 +4,6 @@ namespace marcusvbda\supernova\livewire\components;
 
 use App\Http\Supernova\Application;
 use Livewire\Component;
-use Livewire\Attributes\On;
 
 class DatatableGlobalFilter extends Component
 {
@@ -17,14 +16,21 @@ class DatatableGlobalFilter extends Component
     public $checkDeclaration = true;
     public $perPage = 10;
     public $sort = '';
+    public $tableId = null;
 
-    #[On('table:sort')]
+    public function getListeners()
+    {
+        return [
+            'table:perPage-' . $this->tableId => 'setPerPage',
+            'table:sort-' . $this->tableId => 'setSort',
+        ];
+    }
+
     public function setSort($perPage, $sort)
     {
         $this->sort = $sort;
     }
 
-    #[On('table:perPage')]
     public function setPerPage($perPage)
     {
         $this->perPage = +$perPage;
@@ -33,7 +39,7 @@ class DatatableGlobalFilter extends Component
     public function clearSearch()
     {
         $this->text = "";
-        $this->dispatch('table:globalFilterUpdated', $this->perPage, $this->sort, $this->text);
+        $this->dispatch('table:globalFilterUpdated-' . $this->tableId, $this->perPage, $this->sort, $this->text);
     }
 
     private function makeApplication()
@@ -59,7 +65,7 @@ class DatatableGlobalFilter extends Component
 
     public function updatedText()
     {
-        $this->dispatch('table:globalFilterUpdated', $this->perPage, $this->sort, $this->text);
+        $this->dispatch('table:globalFilterUpdated-' . $this->tableId, $this->perPage, $this->sort, $this->text);
     }
 
     public function render()
