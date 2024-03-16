@@ -5,7 +5,6 @@ namespace marcusvbda\supernova\livewire\components;
 use App\Http\Supernova\Application;
 use Livewire\Component;
 use Livewire\Attributes\Lazy;
-use Cache;
 use Livewire\Attributes\On;
 
 #[Lazy]
@@ -13,7 +12,7 @@ class SelectField extends Component
 {
     public $index;
     public $limit;
-    public $selected;
+    public $selected = [];
     public $all_is_selected;
     public $option_size;
     public $options = [];

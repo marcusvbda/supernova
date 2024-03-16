@@ -7,9 +7,11 @@ use Auth;
 use marcusvbda\supernova\livewire\components\Alerts;
 use marcusvbda\supernova\livewire\components\Breadcrumb;
 use marcusvbda\supernova\livewire\components\CounterCard;
-use marcusvbda\supernova\livewire\components\Crud;
+use marcusvbda\supernova\livewire\components\CrudHeader;
+use marcusvbda\supernova\livewire\components\CrudTextField;
+use marcusvbda\supernova\livewire\components\CrudSelectField;
+use marcusvbda\supernova\livewire\components\CrudUploadField;
 use marcusvbda\supernova\livewire\components\Dashboard;
-use marcusvbda\supernova\livewire\components\Datatable;
 use marcusvbda\supernova\livewire\components\DatatableBody;
 use marcusvbda\supernova\livewire\components\DatatableGlobalFilter;
 use marcusvbda\supernova\livewire\components\DatatableHeader;
@@ -138,9 +140,19 @@ class Application
         return Navbar::class;
     }
 
-    public function datatable(): string
+    public function crudSelectField(): string
     {
-        return Datatable::class;
+        return CrudSelectField::class;
+    }
+
+    public function crudUploadField(): string
+    {
+        return CrudUploadField::class;
+    }
+
+    public function crudTextField(): string
+    {
+        return CrudTextField::class;
     }
 
     public function datatableGlobalFilter(): string
@@ -210,6 +222,11 @@ class Application
     public function counterCard(): string
     {
         return CounterCard::class;
+    }
+
+    public function crudHeader(): string
+    {
+        return CrudHeader::class;
     }
 
     public function dashboardMetrics()

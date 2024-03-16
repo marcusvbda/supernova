@@ -47,7 +47,6 @@ class SupernovaServiceProvider extends ServiceProvider
     protected function registerLivewireComponents()
     {
         Livewire::component('supernova::navbar', $this->novaApp->navbar());
-        Livewire::component('supernova::datatable', $this->novaApp->datatable());
         Livewire::component('supernova::datatable-global-filter', $this->novaApp->datatableGlobalFilter());
         Livewire::component('supernova::datatable-header', $this->novaApp->datatableHeader());
         Livewire::component('supernova::datatable-header-filter', $this->novaApp->datatableHeaderFilter());
@@ -60,8 +59,10 @@ class SupernovaServiceProvider extends ServiceProvider
         Livewire::component('supernova::counter-card', $this->novaApp->counterCard());
         Livewire::component('supernova::dashboard', $this->novaApp->dashboard());
         Livewire::component('supernova::alerts', $this->novaApp->alerts());
-        Livewire::component('supernova::crud', $this->novaApp->crud());
-
+        Livewire::component('supernova::crud-header', $this->novaApp->crudHeader());
+        Livewire::component('supernova::crud-text-field', $this->novaApp->crudTextField());
+        Livewire::component('supernova::crud-select-field', $this->novaApp->crudSelectField());
+        Livewire::component('supernova::crud-upload-field', $this->novaApp->crudUploadField());
         $this->app->bind('supernova:install', InstallCommand::class);
         $this->commands([
             'supernova:install',

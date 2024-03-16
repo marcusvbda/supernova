@@ -4,7 +4,6 @@ namespace marcusvbda\supernova\livewire\components;
 
 use App\Http\Supernova\Application;
 use Livewire\Component;
-use Livewire\Attributes\On;
 
 class DatatableHeader extends Component
 {

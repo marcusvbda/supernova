@@ -4,7 +4,6 @@ namespace marcusvbda\supernova;
 
 use Illuminate\Database\Eloquent\Collection;
 use Illuminate\View\View;
-use Cache;
 
 class Module
 {
@@ -26,33 +25,9 @@ class Module
         return "your model here ...";
     }
 
-    public function getCacheQtyKey(): string
+    public function getQty(): int
     {
-        return 'qty:' . $this->id();
-    }
-
-    public function getCacheCreateKey(): string
-    {
-        return 'create:' . $this->id();
-    }
-
-    public function getCacheEditKey(): string
-    {
-        return 'edit:' . $this->id();
-    }
-
-    public function clearCacheQty(): void
-    {
-        Cache::forget($this->getCacheQtyKey());
-        Cache::forget($this->getCacheCreateKey());
-        Cache::forget($this->getCacheEditKey());
-    }
-
-    public function getCachedQty(): int
-    {
-        return Cache::remember($this->getCacheQtyKey(), 60 * 60 * 24, function () {
-            return $this->makeModel()->count();
-        });
+        return $this->makeModel()->count();
     }
 
     public function title($page): string
@@ -311,7 +286,6 @@ class Module
         if (count($fieldResources)) {
             $panels[] = Panel::make("", "resources")->fields($fieldResources);
         }
-
         return $panels;
     }
 
@@ -332,7 +306,6 @@ class Module
 
     public function onSaved($id): int
     {
-        $this->clearCacheQty();
         return $id;
     }
 
@@ -368,30 +341,6 @@ class Module
     {
         $parent_id = data_get($info, "parent_id");
         $parent_module = data_get($info, "parent_module");
-        $uploads = data_get($values, "uploads", []);
-        foreach ($uploads as $key => $upload) {
-            $field = $this->getField($key);
-            $disk = $field->uploadDisk;
-            if ($upload) {
-                foreach ($upload as $file) {
-                    if (!is_array($file)) {
-                        $extension = $file->getClientOriginalExtension();
-                        $fileName = uniqid();
-                        $file->storeAs($field->uploadPath, $fileName, $disk);
-                        $values['save'][$key][] = [
-                            "path" => $field->uploadPath,
-                            "id" => $fileName,
-                            "extension" => $extension,
-                            "disk" => $disk,
-                            "original_name" => $file->getClientOriginalName(),
-                            "size" => $file->getSize(),
-                        ];
-                    }
-                }
-            } else {
-                $values['save'][$key] = [];
-            }
-        }
         if ($parent_id && $parent_module) {
             $application = app()->make(config('supernova.application', Application::class));
             $parentModule = $application->getModule($parent_module, false);

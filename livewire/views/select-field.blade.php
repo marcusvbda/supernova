@@ -29,8 +29,10 @@
                     $selectedLabel = @collect($options)->where('value', $s)->first()['label'];
                 @endphp
                 <span
-                    class="relative flex items-center inline-flex items-center rounded-md bg-blue-300 border border-blue-400 px-2 py-1 text-xs font-medium text-white ring-1 ring-inset ring-gray-500/10 dark:bg-blue-600">
-                    {{ $selectedLabel }}
+                    class="relative flex items-center  inline-flex items-center rounded-md bg-blue-300 border border-blue-400 px-2 py-1 text-xs font-medium text-white ring-1 ring-inset ring-gray-500/10 dark:bg-blue-600">
+                    <div class="pr-2">
+                        {{ $selectedLabel }}
+                    </div>
                     <button type="button" wire:click="removed('{{ $s }}')"
                         class="text-white hover:text-blue-500 dark:hover:text-blue-200 focus:outline-none ml-auto cursor-pointer">
                         <svg class="h-4 w-4 stroke-current" fill="none" viewBox="0 0 24 24" stroke="currentColor">

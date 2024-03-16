@@ -12,16 +12,17 @@
         <div class="{{ $class }} px-4 py-3 shadow-md mb-2 alert-message transition-opacity duration-500 ease-in-out"
             role="alert">
             <div class="flex">
-                <p class="text-sm">{{ data_get($alert, 'message') }}</p>
+                <p class="text-sm">{!! data_get($alert, 'message') !!}</p>
             </div>
         </div>
     @endforeach
     @script
         <script>
-            const els = document.querySelectorAll('.alert-message');
-            setTimeout(() => {
+            let timeout = null;
+            const removeErrors = () => {
+                const els = document.querySelectorAll('.alert-message');
                 Array.from(els).reverse().forEach((element, index) => {
-                    setTimeout(() => {
+                    timeout = setTimeout(() => {
                         element.classList.add(
                             'opacity-0');
                         setTimeout(() => {
@@ -29,7 +30,17 @@
                         }, 500);
                     }, index * 500);
                 });
+            }
+            setTimeout(() => {
+                removeErrors();
             }, 5000);
+            window.Livewire.on('quick:alert', () => {
+                clearTimeout(timeout);
+                timeout = setTimeout(() => {
+                    removeErrors();
+                }, 5000);
+
+            });
         </script>
     @endscript
 </div>
