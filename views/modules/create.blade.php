@@ -1,7 +1,7 @@
 @php
     $title = $module->title('create');
     $crudId = uniqid();
-    @$panels = $module->getVisibleFieldPanels('Cadastro de', @$entity, $crudType);
+    @$panels = $module->getVisibleFieldPanels('Cadastro de', null, $crudType);
     $title = data_get($panels, '0.label');
 @endphp
 @extends(config('supernova.modules_template', 'supernova::templates.default'))
@@ -57,10 +57,14 @@
                                     @if (View::exists($fieldBlade))
                                         @include($fieldBlade, ['field' => $field, 'wireKey' => $wireKey])
                                     @else
-                                        {!! $module->processFieldDetail(@$entity, $field) !!}
+                                        {!! $module->processFieldDetail(null, $field) !!}
                                     @endif
                                 @else
-                                    {!! $component(@$entity, [...$values, ...$uploadValues], @$entity ? 'edit' : 'create') !!}
+                                    @livewire('supernova::crud-custom-component', [
+                                        'index' => $field->field,
+                                        'crudId' => $crudId,
+                                        'moduleId' => $module->id(),
+                                    ])
                                 @endif
                             </div>
                         </div>

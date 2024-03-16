@@ -68,7 +68,12 @@
                                         {!! $module->processFieldDetail(@$entity, $field) !!}
                                     @endif
                                 @else
-                                    {!! $component(@$entity, @$entity ? 'edit' : 'create') !!}
+                                    @livewire('supernova::crud-custom-component', [
+                                        'index' => $field->field,
+                                        'crudId' => $crudId,
+                                        'moduleId' => $module->id(),
+                                        'entity' => $entity,
+                                    ])
                                 @endif
                             </div>
                         </div>

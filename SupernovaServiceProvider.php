@@ -63,6 +63,7 @@ class SupernovaServiceProvider extends ServiceProvider
         Livewire::component('supernova::crud-text-field', $this->novaApp->crudTextField());
         Livewire::component('supernova::crud-select-field', $this->novaApp->crudSelectField());
         Livewire::component('supernova::crud-upload-field', $this->novaApp->crudUploadField());
+        Livewire::component('supernova::crud-custom-component', $this->novaApp->crudCustomComponent());
         $this->app->bind('supernova:install', InstallCommand::class);
         $this->commands([
             'supernova:install',

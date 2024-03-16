@@ -7,6 +7,7 @@ use Auth;
 use marcusvbda\supernova\livewire\components\Alerts;
 use marcusvbda\supernova\livewire\components\Breadcrumb;
 use marcusvbda\supernova\livewire\components\CounterCard;
+use marcusvbda\supernova\livewire\components\CrudCustomComponent;
 use marcusvbda\supernova\livewire\components\CrudHeader;
 use marcusvbda\supernova\livewire\components\CrudTextField;
 use marcusvbda\supernova\livewire\components\CrudSelectField;
@@ -173,6 +174,11 @@ class Application
     public function datatableBody(): string
     {
         return DatatableBody::class;
+    }
+
+    public function crudCustomComponent(): string
+    {
+        return CrudCustomComponent::class;
     }
 
     public function datatablePagination(): string

@@ -168,6 +168,7 @@ class CrudHeader extends Component
         $this->makeApplication();
         if ($this->entity) {
             $this->makeDataValues();
+            $this->dispatch("crud:setValues-" . $this->crudId, $this->values);
         }
     }
 
