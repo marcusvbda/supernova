@@ -72,6 +72,11 @@ class Application
         ];
     }
 
+    public function logoHeigth(): string
+    {
+        return 100;
+    }
+
     public function logo(): string
     {
         return "https://tailwindui.com/img/logos/mark.svg?color=blue&shade=500";

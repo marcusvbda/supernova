@@ -3,15 +3,15 @@
         <div class="relative flex h-16 items-center justify-between">
             <div class="flex flex-1 items-center justify-center sm:items-stretch sm:justify-start">
                 <a href="{{ $homeRoute }}" class="flex flex-shrink-0 items-center mr-8">
-                    <img class="h-6 w-auto" src="{{ $logo }}">
+                    <img class="h-[40px] w-auto" src="{{ $logo }}">
                 </a>
-                <div class="hidden sm:ml-6 sm:block">
+                <div class="hidden sm:ml-6 sm:flex align-center">
                     <div class="flex space-x-4">
                         @foreach ($items as $key => $value)
                             @if (is_string($value))
                                 <div class="relative flex">
                                     <a href="{{ $value }}"
-                                        class="{{ $currentUrl == $value ? 'bg-gray-300 dark:bg-gray-900' : 'dark:bg-gray-700' }} dark:text-white rounded-md px-3 py-2 text-sm font-medium">
+                                        class="{{ $currentUrl == $value ? 'bg-gray-300 dark:bg-gray-900' : 'dark:bg-gray-700' }} dark:text-white rounded-md px-3 py-2 text-sm font-medium flex align-center">
                                         {{ $key }}
                                     </a>
                                 </div>

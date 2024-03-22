@@ -8,6 +8,7 @@ use Livewire\Component;
 class Login extends Component
 {
     public $logo;
+    public $logoHeigth;
     public $email;
     public $password;
     public $redirect;
@@ -16,6 +17,7 @@ class Login extends Component
     {
         $application = app()->make(config("supernova.application", Application::class));
         $this->logo = $application->logo();
+        $this->logoHeigth = $application->logoHeigth();
     }
 
     public function getRules()
