@@ -1,6 +1,6 @@
 <div class="flex items-center justify-between p-3 flex flex-row flex-col md:flex-row gap-3">
     <div class="w-full md:w-3/12">
-        <select wire:model.change="perPage"
+        <select wire:model.change="perPage" @if ($totalResults === null) disabled @endif
             class="block rounded-md w-full md:w-auto border py-1.5 pr-20 text-gray-900 shadow-sm placeholder:text-gray-400 sm:text-sm sm:leading-6 px-3 dark:bg-gray-800 dark:border-gray-800 dark:text-gray-50">
             @foreach ($perPageOptions as $option)
                 <option value="{{ $option }}">
@@ -12,8 +12,10 @@
     <div class="w-full md:w-9/12 flex align-center justify-center md:justify-end pagination-section ">
         <div class="flex flex-col gap-3 items-center md:flex-row">
             <span class="text-light text-neutral-700 text-sm dark:text-gray-300">
-                {{ $currentPage }} / {{ $totalPages }} Página{{ $totalPages > 1 ? 's' : '' }} - (Total de
-                {{ $totalResults }} registro{{ $totalResults > 1 ? 's' : '' }})
+                @if ($totalResults !== null)
+                    {{ $currentPage }} / {{ $totalPages }} Página{{ $totalPages > 1 ? 's' : '' }} - (Total de
+                    {{ $totalResults }} registro{{ $totalResults > 1 ? 's' : '' }})
+                @endif
             </span>
             <div class="flex flex-row gap-3">
                 <button wire:click.prevent="previousPage('{{ $prevCursor }}')"

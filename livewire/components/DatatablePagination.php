@@ -12,7 +12,7 @@ class DatatablePagination extends Component
     public $perPageOptions = [10, 25, 50, 100];
     public $perPage = 10;
     public $totalPages = 1;
-    public $totalResults = 0;
+    public $totalResults = null;
     public $currentPage = 1;
     public $prevCursor = null;
     public $hasPrevCursor = false;

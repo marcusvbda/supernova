@@ -3,6 +3,7 @@
 namespace marcusvbda\supernova\livewire\components;
 
 use App\Http\Supernova\Application;
+use Illuminate\Support\Sleep;
 use Livewire\Component;
 use Livewire\Attributes\Lazy;
 use Livewire\Attributes\On;
@@ -12,16 +13,15 @@ class SelectField extends Component
 {
     public $index;
     public $limit;
+    public $initialized = false;
     public $selected = [];
     public $all_is_selected;
     public $option_size;
     public $options = [];
-    public $initOptions = [];
     public $moduleId;
     public $type;
     public $entity = null;
     public $disabled = false;
-    public $reload;
     public $lazy;
     public $crudType = 'details';
     public $perPage = 10;
@@ -42,7 +42,6 @@ class SelectField extends Component
 
     public function placeholder()
     {
-        if (!$this->lazy) return "<div></div>";
         return view('supernova-livewire-views::skeleton', ['size' => '38px']);
     }
 
@@ -54,31 +53,30 @@ class SelectField extends Component
 
     public function loadOptions()
     {
-        if (!$this->reload) {
-            $this->options = $this->initOptions;
-            return;
-        }
-        $module = $this->getAppModule();
-        if ($this->type === "filter") {
-            $columns = $module->getDataTableVisibleColumns();
-            $column = collect($columns)->first(fn ($col) => $col->name == $this->index);
-            $filter_options_callback = $column->filter_options_callback;
-            if ($filter_options_callback && is_callable($filter_options_callback)) {
-                $this->options =   $filter_options_callback();
+        if (!$this->initialized) {
+            $module = $this->getAppModule();
+            if ($this->type === "filter") {
+                $columns = $module->getDataTableVisibleColumns();
+                $column = collect($columns)->first(fn ($col) => $col->name == $this->index);
+                $filter_options_callback = $column->filter_options_callback;
+                if ($filter_options_callback && is_callable($filter_options_callback)) {
+                    $this->options =   $filter_options_callback();
+                } else {
+                    $this->options =  $column->filter_options;
+                }
             } else {
-                $this->options =  $column->filter_options;
+                $fields = $this->allFields();
+                $field = collect($fields)->first(function ($f) {
+                    return $f->field == $this->index;
+                });
+                $options_callback = $field->options_callback;
+                if ($options_callback && is_callable($options_callback)) {
+                    $this->options =  $options_callback();
+                } else {
+                    $this->options = $field->options;
+                }
             }
-        } else {
-            $fields = $this->allFields();
-            $field = collect($fields)->first(function ($f) {
-                return $f->field == $this->index;
-            });
-            $options_callback = $field->options_callback;
-            if ($options_callback && is_callable($options_callback)) {
-                $this->options =  $options_callback();
-            } else {
-                $this->options = $field->options;
-            }
+            $this->initialized = true;
         }
     }
 

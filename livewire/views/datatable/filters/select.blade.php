@@ -1,6 +1,5 @@
 @php
     $wireKey = $field . '-' . uniqid();
-    $lazy = true;
 @endphp
 <section class="flex flex-col" id="{{ $wireKey }}" class="flex flex-col" id="{{ $wireKey }}">
     @livewire(
@@ -12,11 +11,10 @@
             'moduleId' => $moduleId,
             'type' => 'filter',
             'crudType' => 'list',
-            'lazy' => $lazy,
-            'reload' => true,
             'perPage' => $perPage,
             'sort' => $sort,
             'refId' => $tableId,
+            'option_size' => '100%',
         ],
         key($wireKey)
     )

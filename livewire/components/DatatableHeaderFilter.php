@@ -83,12 +83,6 @@ class DatatableHeaderFilter extends Component
         $this->filterable = collect($this->columns)->filter(fn ($row) => $row["filterable"])->count() > 0;
     }
 
-    // public function setFilter($filters)
-    // {
-    //     // dd($filters);
-    //     $this->filters = $filters;
-    // }
-
     public function updated($field)
     {
         if (str_starts_with($field, "filters.")) {

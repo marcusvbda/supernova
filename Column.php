@@ -89,7 +89,8 @@ class Column
                 if (count($values) <= 0) return $query;
                 if (!$this->model) return $query->whereIn($this->name, $values);
                 $query->whereHas($this->name, function ($q) use ($values) {
-                    $q->whereIn(data_get($this->option_keys, 'value'), $values);
+                    $tableName = $q->getModel()->getTable();
+                    $q->whereIn($tableName . "." . data_get($this->option_keys, 'value'), $values);
                 });
                 return $query;
             };
