@@ -17,7 +17,7 @@ class Details extends Component
 
     public function placeholder()
     {
-        return view('supernova-livewire-views::skeleton', ['size' => '500px']);
+        return view('supernova-livewire-views::skeleton', ['size' => '500px','class' => 'mt-4']);
     }
 
     private function getModule()
@@ -53,7 +53,7 @@ class Details extends Component
     }
 
     public function render()
-    {
+    {   
         return view('supernova-livewire-views::details.index');
     }
 }

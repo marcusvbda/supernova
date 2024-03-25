@@ -11,6 +11,17 @@
             $values[$field->field] = $appModule->processFieldDetail($entity, $field);
         }
     }
+    $editUrl = '';
+    if ($parentId && $parentModule) {
+        $editUrl = route('supernova.modules.field-edit', [
+            'module' => $parentModule,
+            'id' => $parentId,
+            'field' => $appModule->id(),
+            'fieldId' => @$entity->id,
+        ]);
+    } else {
+        $editUrl = route('supernova.modules.edit', ['module' => $appModule->id(), 'id' => $entity->id]);
+    }
 @endphp
 <div class="flex flex-col pb-10">
     @foreach ($fieldPanels as $key => $panel)
@@ -21,10 +32,12 @@
                 <div class="text-sm order-1 flex justify-end">
                     <div>
                         @if ($canEdit || @$parentId)
-                            <button type="button" wire:click="redirectToEdit" wire:loading.attr="disabled"
-                                class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-6 rounded transition dark:bg-gray-800 hover:dark:bg-gray-900">
-                                Editar
-                            </button>
+                            <a href="{{ $editUrl }}">
+                                <button type="button" wire:loading.attr="disabled"
+                                    class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-6 rounded transition dark:bg-gray-800 hover:dark:bg-gray-900">
+                                    Editar
+                                </button>
+                            </a>
                         @endif
                         @if ($canDelete || @$parentId)
                             <button type="button" wire:click="deleteEntity" wire:loading.attr="disabled"
