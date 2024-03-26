@@ -170,6 +170,7 @@ class Column
     public function width($value): Column
     {
         $this->width = $value;
+        if (!$this->minWidth) $this->minWidth = $value;
         return $this;
     }
 
