@@ -209,7 +209,7 @@ class Module
             $model = $model->where(function ($query) use ($columns, $searchText) {
                 foreach ($columns as $column) {
                     if ($column->searchable) {
-                        $query->orWhere($column->name, "like", "%{$searchText}%");
+                        $query->orWhere($column->name, "ILIKE", "%{$searchText}%");
                     }
                 }
             });
