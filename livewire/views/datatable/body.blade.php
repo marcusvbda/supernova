@@ -44,7 +44,7 @@
                             $isFirst = $key === 0;
                         @endphp
                         <td
-                            class="@if ($isFirst) table-column-fixed @endif @if ($field === 'id')  @endif p-4 px-5 text-right font-light text-sm text-gray-600 @if ($showBorder) border-r border-gray-200 dark:border-gray-700 @endif dark:text-gray-300">
+                            class="@if ($isFirst) table-column-fixed @endif @if ($field === 'id')  @endif text-wrap p-4 px-5 text-left font-light text-sm text-gray-600 @if ($showBorder) border-r border-gray-200 dark:border-gray-700 @endif dark:text-gray-300">
                             <div class="w-full flex {{ $align }}">
                                 @if ($isFirst)
                                     <a href="{{ $moduleUrl . '/' . $item['_id'] }}"
