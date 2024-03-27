@@ -16,6 +16,8 @@
                     'column' => $value,
                     'field' => $field,
                     'filter_options_limit' => $filter_options_limit,
+                    'filterOptions' => $filterOptions,
+                    'tableId' => $tableId,
                 ])
             @endif
         </th>

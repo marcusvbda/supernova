@@ -17,6 +17,7 @@ class DatatableHeaderFilter extends Component
     public $perPage = 10;
     public $sort = '';
     public $tableId = null;
+    public $filterOptions = [];
 
     public function getListeners()
     {
@@ -25,6 +26,7 @@ class DatatableHeaderFilter extends Component
             'table:sort-' . $this->tableId => 'setSort',
             'filter-selected-' . $this->tableId => 'fieldSelected',
             'filter-removed-' . $this->tableId => 'removeFilterOption',
+            "table:setFilterOptions-" . $this->tableId => 'setFilterOptions'
         ];
     }
 
@@ -88,6 +90,11 @@ class DatatableHeaderFilter extends Component
         if (str_starts_with($field, "filters.")) {
             $this->dispatch('filter-updated-' . $this->tableId, $this->filters, $this->perPage, $this->sort);
         }
+    }
+
+    public function setFilterOptions($key, $options)
+    {
+        $this->filterOptions[$key] = $options;
     }
 
     public function render()
