@@ -167,6 +167,12 @@ class Module
         return "id|desc";
     }
 
+    public function canViewDetails(): bool
+    {
+        $permissions = array_merge($this->defaultPermissions, $this->permissions());
+        return $permissions["view_details"];
+    }
+
     public function canEdit(): bool
     {
         $permissions = array_merge($this->defaultPermissions, $this->permissions());

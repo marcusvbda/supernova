@@ -46,7 +46,7 @@
                         <td
                             class="@if ($isFirst) table-column-fixed @endif @if ($field === 'id')  @endif text-wrap p-4 px-5 text-left font-light text-sm text-gray-600 @if ($showBorder) border-r border-gray-200 dark:border-gray-700 @endif dark:text-gray-300">
                             <div class="w-full flex {{ $align }}">
-                                @if ($isFirst)
+                                @if ($isFirst && $canViewDetails)
                                     <a href="{{ $moduleUrl . '/' . $item['_id'] }}"
                                         class="font-medium text-blue-600 dark:text-blue-300 hover:underline ">
                                 @endif

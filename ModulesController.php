@@ -36,7 +36,7 @@ class ModulesController extends Controller
     public function details($module, $id): View
     {
         $module = $this->application->getModule($module);
-        if (!$module->canViewIndex()) abort(403);
+        if (!$module->canViewDetails()) abort(403);
         $target = $module->makeModel()->findOrFail($id);
         return $module->details($target);
     }

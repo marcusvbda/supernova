@@ -28,6 +28,7 @@ class DatatableBody extends Component
     public $loaded = false;
     public $totalPages = 0;
     public $tableId = null;
+    public $canViewDetails = false;
 
     public function placeholder()
     {
@@ -77,6 +78,7 @@ class DatatableBody extends Component
             $row["filter_callback"] = null;
             return $row;
         }, $this->module->getDataTableVisibleColumns());
+        $this->canViewDetails = $this->module->canViewDetails();
         $this->colspan = count($this->columns);
     }
 
